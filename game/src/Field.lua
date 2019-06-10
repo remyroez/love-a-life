@@ -61,6 +61,7 @@ end
 
 -- 描画
 function Field:draw()
+    -- マスの描画
     for x, row in ipairs(self.squares) do
         for y, square in ipairs(row) do
             love.graphics.push()
@@ -70,9 +71,12 @@ function Field:draw()
             love.graphics.pop()
         end
     end
+
+    -- マス目の描画
+    self:drawMeasures()
 end
 
--- 描画
+-- マスの描画
 function Field:drawSquare(square)
     love.graphics.setColor(
         square.nutrients.animal,
@@ -80,6 +84,19 @@ function Field:drawSquare(square)
         square.nutrients.mineral
     )
     love.graphics.rectangle('fill', 0, 0, 1, 1)
+end
+
+-- マス目の描画
+function Field:drawMeasures()
+    love.graphics.push()
+    love.graphics.setColor(0, 0, 0)
+    for x = 1, self.numHorizontal do
+        love.graphics.line((x - 1) * self.unitWidth, 0, (x - 1) * self.unitWidth, self.height)
+    end
+    for y = 1, self.numVertical do
+        love.graphics.line(0, (y - 1) * self.unitHeight, self.width, (y - 1) * self.unitHeight)
+    end
+    love.graphics.pop()
 end
 
 return Field
