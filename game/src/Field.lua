@@ -30,7 +30,7 @@ function Field:setup(width, height, numHorizontal, numVertical)
     for x = 1, self.numHorizontal do
         self.squares[x] = {}
         for y = 1, self.numVertical do
-            self.squares[x][y] = Square(x - 1, y - 1)
+            self.squares[x][y] = Square { x = x - 1, y = y - 1, xr = (x - 1) / self.numHorizontal, yr = (y - 1) / self.numVertical }
         end
     end
 end
@@ -46,15 +46,40 @@ function Field:getSquare(x, y)
 end
 
 -- 描画
+function Field:update(dt)
+    self:decompose(dt)
+end
+
+-- 分解作用
+function Field:decompose(dt)
+    for x, row in ipairs(self.squares) do
+        for y, square in ipairs(row) do
+            square:decompose(dt)
+        end
+    end
+end
+
+-- 描画
 function Field:draw()
     for x, row in ipairs(self.squares) do
         for y, square in ipairs(row) do
             love.graphics.push()
             love.graphics.translate((x - 1) * self.unitWidth, (y - 1) * self.unitHeight)
-            square:draw()
+            love.graphics.scale(self.unitWidth, self.unitHeight)
+            self:drawSquare(square)
             love.graphics.pop()
         end
     end
+end
+
+-- 描画
+function Field:drawSquare(square)
+    love.graphics.setColor(
+        square.nutrients.animal,
+        square.nutrients.plantal,
+        square.nutrients.mineral
+    )
+    love.graphics.rectangle('fill', 0, 0, 1, 1)
 end
 
 return Field

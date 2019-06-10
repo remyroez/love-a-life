@@ -20,18 +20,22 @@ end
 
 -- 更新
 function Game:update(dt, ...)
+    self.field:update(dt)
 end
 
 -- 描画
 function Game:draw(...)
     self.field:draw()
 
+    love.graphics.setColor(1, 1, 1)
     local str = ''
     local x, y = love.mouse.getPosition()
     str = str .. 'x = ' .. x .. ', y = ' .. y
     local square = self.field:getSquare(x, y)
     if square then
-        str = str .. ', value = "' .. square.value .. '"'
+        str = str .. ', animal = ' .. square.nutrients.animal .. ''
+        str = str .. ', plantal = ' .. square.nutrients.plantal .. ''
+        str = str .. ', mineral = ' .. square.nutrients.mineral .. ''
     end
     love.graphics.print(str, 0, 50)
 end

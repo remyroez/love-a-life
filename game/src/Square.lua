@@ -1,20 +1,39 @@
 
 local class = require 'middleclass'
+local lume = require 'lume'
 
 -- マスクラス
 local Square = class 'Square'
 
 -- 初期化
-function Square:initialize(...)
-    self.value = ''
-    for _, v in ipairs({...}) do
-        self.value = self.value .. tostring(v) .. ', '
-    end
+function Square:initialize(t)
+    lume.extend(self, type(t) == 'table' and t or {})
+
+    -- 栄養素
+    self.nutrients = self.nutrients or {}
+    self.nutrients.animal = self.nutrients.animal or love.math.noise(self.xr, self.yr, 0)
+    self.nutrients.plantal = self.nutrients.plantal or love.math.noise(self.xr, self.yr, 100)
+    self.nutrients.mineral = self.nutrients.mineral or love.math.noise(self.xr, self.yr, 200)
+
+    -- 分解者
+    self.decomposer = self.decomposer or {}
+    self.decomposer.amount = self.decomposer.amount or 100
+    self.decomposer.process = self.decomposer.process or {}
+    self.decomposer.process.animal = self.decomposer.process.animal or 0.0001
+    self.decomposer.process.plantal = self.decomposer.process.plantal or 0.0001
 end
 
--- 描画
-function Square:draw()
-    love.graphics.print(self.value)
+-- 分解作用
+function Square:decompose(dt)
+    for category, power in pairs(self.decomposer.process) do
+        if self.nutrients.mineral >= 1 then
+
+        elseif self.nutrients[category] > 0 then
+            local move = dt * self.decomposer.amount * power
+            self.nutrients[category] = self.nutrients[category] - move
+            self.nutrients.mineral = self.nutrients.mineral + move
+        end
+    end
 end
 
 return Square
