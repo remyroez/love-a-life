@@ -18,7 +18,6 @@ end
 
 -- 更新
 function Game:update(dt, ...)
-    love.graphics.print('Hello, Game!')
 end
 
 -- 描画
