@@ -6,6 +6,7 @@ local Game = require(folderOfThisFile .. 'class')
 
 -- クラス
 local Application = require 'Application'
+local Field = require 'Field'
 
 -- 初期化
 function Game:initialize(...)
@@ -14,6 +15,7 @@ end
 
 -- 読み込み
 function Game:load(...)
+    self.field = Field{  }
 end
 
 -- 更新
@@ -22,6 +24,16 @@ end
 
 -- 描画
 function Game:draw(...)
+    self.field:draw()
+
+    local str = ''
+    local x, y = love.mouse.getPosition()
+    str = str .. 'x = ' .. x .. ', y = ' .. y
+    local square = self.field:getSquare(x, y)
+    if square then
+        str = str .. ', value = "' .. square.value .. '"'
+    end
+    love.graphics.print(str, 0, 50)
 end
 
 -- キー入力
