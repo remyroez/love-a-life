@@ -7,7 +7,6 @@ local Game = require(folderOfThisFile .. 'class')
 -- クラス
 local Application = require 'Application'
 local Field = require 'Field'
-local Entity = require 'Entity'
 
 -- 初期化
 function Game:initialize(...)
@@ -21,13 +20,15 @@ function Game:load(...)
 
     -- フィールド
     self.field = Field{  }
-    self.field:addEntity(
-        Entity {
+    for i = 1, 1000 do
+        self.field:emplaceEntity {
+            x = love.math.random(self.field.width),
+            y = love.math.random(self.field.height),
             components = {
                 (require 'components.Body') {}
-            }
+            },
         }
-    )
+    end
 
     -- 移動モード
     self.move = false
