@@ -1,14 +1,13 @@
 
 local class = require 'middleclass'
 local lume = require 'lume'
-local Component = require 'Component'
 
--- ボディクラス
-local Body = class('Body', Component)
+-- ボディコンポーネントクラス
+local Body = class('Body', require 'Component')
 
 -- 初期化
 function Body:initialize(t)
-    Component.initialize(self, t)
+    self.class.super.initialize(self, t)
 
     self.updatable = false
     self.radius = self.radius or 10
