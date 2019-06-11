@@ -6,6 +6,7 @@ local Field = class 'Field'
 
 -- クラス
 local Square = require 'Square'
+local Entity = require 'Entity'
 
 -- 初期化
 function Field:initialize(args)
@@ -118,6 +119,11 @@ end
 -- エンティティの追加
 function Field:addEntity(entity)
     table.insert(self.entities, entity)
+end
+
+-- エンティティを生成して追加
+function Field:emplaceEntity(t)
+    self:addEntity(Entity(t))
 end
 
 return Field
