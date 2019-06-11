@@ -14,8 +14,13 @@ function Component:initialize(t)
     self.drawable = self.drawable == nil and true or self.drawable
 
     -- 優先度
-    self.updatePriority = self.updatePriority or 0
-    self.drawPriority = self.drawPriority or 0
+    self.updatePriority = self.updatePriority or 1
+    self.drawPriority = self.drawPriority or 1
+end
+
+-- 破棄
+function Component:destroy()
+    self.entity:removeComponent(self)
 end
 
 -- 更新
