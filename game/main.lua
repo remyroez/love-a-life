@@ -13,7 +13,14 @@ application:setDebugMode(debugMode)
 
 -- 読み込み
 function love.load()
+    -- ランダムシードの設定
     love.math.setRandomSeed(love.timer.getTime())
+
+    -- スクリーンショットフォルダの用意
+    local dir = love.filesystem.getInfo('screenshot', 'directory')
+    if dir == nil then
+        love.filesystem.createDirectory('screenshot')
+    end
 end
 
 -- 更新
