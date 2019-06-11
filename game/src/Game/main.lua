@@ -7,6 +7,7 @@ local Game = require(folderOfThisFile .. 'class')
 -- クラス
 local Application = require 'Application'
 local Field = require 'Field'
+local Entity = require 'Entity'
 
 -- 初期化
 function Game:initialize(...)
@@ -20,6 +21,13 @@ function Game:load(...)
 
     -- フィールド
     self.field = Field{  }
+    self.field:addEntity(
+        Entity {
+            components = {
+                (require 'components.Body') {}
+            }
+        }
+    )
 
     -- 移動モード
     self.move = false
@@ -66,7 +74,7 @@ function Game:draw(...)
 
     -- デバッグ
     love.graphics.setColor(1, 1, 1)
-    local str = 'scale = ' .. self:scale() .. ', zoom = ' .. self.zoom .. '\n'
+    local str = 'FPS: ' .. tostring(love.timer.getFPS()) .. '\nscale = ' .. self:scale() .. ', zoom = ' .. self.zoom .. '\n'
     local x, y = love.mouse.getPosition()
     x, y = (x - self.offset.x) / self:scale(), (y - self.offset.y) / self:scale()
     str = str .. 'x = ' .. x .. ', y = ' .. y .. '\n'
