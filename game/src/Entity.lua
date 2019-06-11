@@ -9,6 +9,10 @@ local Entity = class 'Entity'
 function Entity:initialize(t)
     lume.extend(self, type(t) == 'table' and t or {})
 
+    -- 初期プロパティ
+    self.x = self.x or 0
+    self.y = self.y or 0
+
     -- 各種テーブル
     self.updateComponents = self.updateComponents or {}
     self.drawComponents = self.drawComponents or {}
