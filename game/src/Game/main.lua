@@ -131,7 +131,7 @@ end
 
 -- マウスホイール
 function Game:wheelmoved(x, y)
-    if y < 0 and self.zoom > -9 then
+    if y < 0 and self.zoom > -19 then
         -- ズームアウト
         self.zoom = self.zoom - 1
         self:setOffset()
