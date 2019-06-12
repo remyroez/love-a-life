@@ -20,13 +20,13 @@ function Game:load(...)
 
     -- フィールド
     self.field = Field {
-        width = 10000,
-        height = 10000,
-        numHorizontal = 100,
-        numVertical = 100,
+        width = 100,
+        height = 100,
+        numHorizontal = 10,
+        numVertical = 10,
         maxEntities = 10000,
     }
-    for i = 1, 10000 do
+    for i = 1, 10 do
         local x = love.math.random(self.field.width)
         local y = love.math.random(self.field.height)
         self.field:emplaceEntity {
@@ -100,8 +100,17 @@ function Game:draw(...)
     end
     love.graphics.print(str)
 
-    do
-        local s = 'viewport\nleft = ' .. self.field.viewport.left .. ', top = ' .. self.field.viewport.top .. ', right = ' .. self.field.viewport.right .. ', bottom = ' .. self.field.viewport.bottom
+    local entity = self.field.entities[1]
+    if entity then
+        local s = 'entity\n'
+        s = s .. '  x = ' .. entity.x .. ', y = ' .. entity.y .. '\n'
+        for _, c in ipairs(entity.components) do
+            s = s .. '  ' .. c.class.name .. '\n'
+            if c.nutrients then
+                s = s .. '    life = ' .. c.life .. ', health = ' .. c.health .. ', energy = ' .. c.energy .. ', cost = ' .. c.cost .. '\n'
+                s = s .. '    nutrients.animal = ' .. c.nutrients.animal .. ', .plantal = ' .. c.nutrients.plantal .. ', .mineral = ' .. c.nutrients.mineral .. '\n'
+            end
+        end
         love.graphics.print(s, 0, 100)
     end
 end

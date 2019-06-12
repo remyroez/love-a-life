@@ -15,12 +15,12 @@ function Root:initialize(t)
     self.drawable = true
 
     -- Body
-    self.exchange.mineral = 0.001
-    self.cost = 0.001
+    self.exchange.mineral = 0.01
+    self.cost = 0.01
 
     -- プロパティ
     self.absorb = self.absorb or {}
-    self.absorb.power = self.absorb.power or 0.001
+    self.absorb.power = self.absorb.power or 0.01
 end
 
 -- 更新
