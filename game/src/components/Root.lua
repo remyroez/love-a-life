@@ -14,19 +14,27 @@ function Root:initialize(t)
     self.updatable = true
     self.drawable = true
 
+    -- Body
+    self.exchange.mineral = 0.001
+    self.cost = 0.001
+
     -- プロパティ
     self.absorb = self.absorb or {}
-    self.absorb.power = self.absorb.power or 0.01
+    self.absorb.power = self.absorb.power or 0.001
 end
 
 -- 更新
 function Root:update(dt)
+    -- 地面から栄養素の吸収
     local square = self.entity.field:getSquare(self.entity.x, self.entity.y)
     if square then
-        local n = math.min(square.nutrients.mineral, dt * self.absorb.power)
-        square.nutrients.mineral = square.nutrients.mineral - n
+        local t = square.nutrients
+        local n = math.min(t.mineral, dt * self.absorb.power)
+        t.mineral = t.mineral - n
         self.nutrients.mineral = self.nutrients.mineral + n
     end
+
+    Body.update(self, dt)
 end
 
 return Root

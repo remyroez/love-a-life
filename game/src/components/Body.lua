@@ -13,11 +13,26 @@ function Body:initialize(t)
     -- 更新／描画フラグ
     self.updatable = false
 
+    -- マテリアル
+    self.material = 'mineral'
+
     -- 栄養素
     self.nutrients = self.nutrients or {}
     self.nutrients.animal = self.nutrients.animal or 0
     self.nutrients.plantal = self.nutrients.plantal or 0
     self.nutrients.mineral = self.nutrients.mineral or 0
+
+    -- 栄養素
+    self.exchange = self.exchange or {}
+    self.exchange.animal  = self.exchange.animal or 0
+    self.exchange.plantal = self.exchange.plantal or 0
+    self.exchange.mineral = self.exchange.mineral or 0
+
+    -- エネルギー
+    self.life = self.life or 1
+    self.health = self.health or 1
+    self.energy = self.energy or 1
+    self.cost = self.cost or 0
 
     -- その他プロパティ
     self.radius = self.radius or 10
@@ -25,6 +40,60 @@ end
 
 -- 更新
 function Body:update(dt)
+    self:exchangeNutrients(dt)
+    self:payCost(dt)
+    if self.life < 0 then
+        self.remove = true
+    end
+end
+
+-- コストを支払う
+function Body:payCost(dt)
+    -- コスト
+    local cost = self.cost * dt
+
+    -- エネルギー
+    if self.energy > 0 then
+        self.energy = self.energy - cost
+        if self.energy < 0 then
+            cost = -self.energy
+            self.energy = 0
+        else
+            cost = 0
+        end
+    end
+
+    -- ヘルス
+    if cost > 0 and self.health > 0 then
+        self.health = self.health - cost
+        if self.health < 0 then
+            cost = -self.health
+            self.health = 0
+        else
+            cost = 0
+        end
+    end
+
+    -- ライフ
+    if cost > 0 then
+        self.life = self.life - cost
+    end
+end
+
+-- 栄養素をエネルギーに交換
+function Body:exchangeNutrients(dt)
+    for category, rate in pairs(self.exchange) do
+        if rate <= 0 then
+            -- 変換レートが０
+        elseif self.energy >= 1 then
+            -- 十分にあるのでスキップ
+            break
+        elseif self.nutrients[category] > 0 then
+            local n = math.min(self.nutrients[category], dt * rate)
+            self.nutrients[category] = self.nutrients[category] - n
+            self.energy = self.energy + n
+        end
+    end
 end
 
 -- 描画
