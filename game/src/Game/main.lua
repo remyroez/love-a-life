@@ -24,6 +24,7 @@ function Game:load(...)
         height = 10000,
         numHorizontal = 100,
         numVertical = 100,
+        maxEntities = 10000,
     }
     for i = 1, 10000 do
         local x = love.math.random(self.field.width)
@@ -36,7 +37,7 @@ function Game:load(...)
             width = 10,
             height = 10,
             components = {
-                (require 'components.Body') {}
+                (require 'components.Root') {}
             },
         }
     end
