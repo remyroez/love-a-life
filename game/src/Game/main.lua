@@ -19,11 +19,22 @@ function Game:load(...)
     self.width, self.height = love.graphics.getDimensions()
 
     -- フィールド
-    self.field = Field{  }
-    for i = 1, 1000 do
+    self.field = Field {
+        width = 10000,
+        height = 10000,
+        numHorizontal = 100,
+        numVertical = 100,
+    }
+    for i = 1, 10000 do
+        local x = love.math.random(self.field.width)
+        local y = love.math.random(self.field.height)
         self.field:emplaceEntity {
-            x = love.math.random(self.field.width),
-            y = love.math.random(self.field.height),
+            x = x,
+            y = y,
+            left = x - 5,
+            top = y - 5,
+            width = 10,
+            height = 10,
             components = {
                 (require 'components.Body') {}
             },
@@ -36,6 +47,7 @@ function Game:load(...)
     self.offsetOrigin = { x = 0, y = 0 }
     self.offset = { x = 0, y = 0 }
     self.zoom = 0
+    self:setOffset()
 end
 
 -- 更新
@@ -86,6 +98,11 @@ function Game:draw(...)
         str = str .. ', mineral = ' .. square.nutrients.mineral .. ''
     end
     love.graphics.print(str)
+
+    do
+        local s = 'viewport\nleft = ' .. self.field.viewport.left .. ', top = ' .. self.field.viewport.top .. ', right = ' .. self.field.viewport.right .. ', bottom = ' .. self.field.viewport.bottom
+        love.graphics.print(s, 0, 100)
+    end
 end
 
 -- キー入力
@@ -144,6 +161,8 @@ end
 
 -- オフセットの設定
 function Game:setOffset(x, y)
-    self.offset.x = math.max(-self.field.width * self:scale() + self.width * 0.5, math.min(x or self.offset.x, self.width * 0.5))
-    self.offset.y = math.max(-self.field.height * self:scale() + self.height * 0.5, math.min(y or self.offset.y, self.height * 0.5))
+    local s = self:scale()
+    self.offset.x = math.max(-self.field.width * s + self.width * 0.5, math.min(x or self.offset.x, self.width * 0.5))
+    self.offset.y = math.max(-self.field.height * s + self.height * 0.5, math.min(y or self.offset.y, self.height * 0.5))
+    self.field:setViewport(-self.offset.x / s, -self.offset.y / s, self.width / s, self.height / s)
 end
