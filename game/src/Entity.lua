@@ -26,9 +26,13 @@ function Entity:initialize(t)
 
     -- コンポーネントが指定されていたら、各テーブルに登録
     if self.components then
-        for i, component in ipairs(self.components) do
+        local t = self.components
+        self.components = {}
+        for i, component in ipairs(t) do
             self:addComponent(component)
         end
+    else
+        self.components = {}
     end
 end
 
@@ -94,6 +98,9 @@ function Entity:addComponent(component)
 
     -- 所有しているエンティティを登録
     component.entity = self
+
+    -- コンポーネント一覧に追加
+    table.insert(self.components, component)
 end
 
 -- 指定のテーブルの優先度別テーブルからコンポーネントを削除する
@@ -125,6 +132,9 @@ function Entity:removeComponent(component)
 
     -- 所有エンティティを削除
     component.entity = nil
+
+    -- コンポーネント一覧から削除
+    lume.remove(self.components, component)
 end
 
 -- 同じ名前のコンポーネント一覧の取得
