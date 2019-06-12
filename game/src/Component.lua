@@ -16,6 +16,9 @@ function Component:initialize(t)
     -- 優先度
     self.updatePriority = self.updatePriority or 1
     self.drawPriority = self.drawPriority or 1
+
+    -- 破棄フラグ
+    self.remove = false
 end
 
 -- 破棄

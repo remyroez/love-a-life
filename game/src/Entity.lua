@@ -18,11 +18,13 @@ function Entity:initialize(t)
     self.top = self.top or self.y
     self.right = self.right or (self.left + self.width)
     self.bottom = self.bottom or (self.top + self.height)
+    self.remove = false
 
     -- 各種テーブル
     self.updateComponents = self.updateComponents or {}
     self.drawComponents = self.drawComponents or {}
     self.nameTable = {}
+    self.removes = {}
 
     -- コンポーネントが指定されていたら、各テーブルに登録
     if self.components then
@@ -46,6 +48,22 @@ function Entity:update(dt)
     for i, t in ipairs(self.updateComponents) do
         for j, component in ipairs(t) do
             component:update(dt)
+
+            -- 削除フラグが立っていればリストに登録
+            if component.remove then
+                table.insert(self.removes, component)
+            end
+        end
+    end
+
+    -- 削除
+    if self.removes[1] then
+        for _, component in ipairs(self.removes) do
+            self:removeComponent(component)
+        end
+        self.removes = {}
+        if #self.components == 0 then
+            self.remove = true
         end
     end
 end
@@ -144,7 +162,7 @@ end
 
 -- 同じ名前のコンポーネント一覧の取得
 function Entity:getComponents(name)
-    return self.nameTable[component.name]
+    return self.nameTable[name]
 end
 
 -- コンポーネントの取得

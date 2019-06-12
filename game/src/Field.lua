@@ -15,6 +15,7 @@ function Field:initialize(args)
     self:setup(args.width, args.height, args.numHorizontal, args.numVertical)
     self:setViewport()
     self.entities = self.entities or {}
+    self.removes = {}
     self.maxEntities = self.maxEntities or 10000
 end
 
@@ -59,7 +60,20 @@ function Field:update(dt)
     for _, entity in ipairs(self.entities) do
         if entity:updatable() then
             entity:update(dt)
+
+            -- 削除フラグが立っていればリストに登録
+            if entity.remove then
+                table.insert(self.removes, entity)
+            end
         end
+    end
+
+    -- エンティティ削除
+    if self.removes[1] then
+        for _, entity in ipairs(self.removes) do
+            self:removeEntity(entity)
+        end
+        self.removes = {}
     end
 end
 
