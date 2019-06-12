@@ -12,6 +12,7 @@ local Entity = require 'Entity'
 function Field:initialize(args)
     args = args or {}
     self:setup(args.width, args.height, args.numHorizontal, args.numVertical)
+    self:setViewport()
     self.entities = self.entities or {}
 end
 
@@ -73,12 +74,14 @@ end
 function Field:draw()
     -- マスの描画
     for x, row in ipairs(self.squares) do
-        for y, square in ipairs(row) do
-            love.graphics.push()
-            love.graphics.translate((x - 1) * self.unitWidth, (y - 1) * self.unitHeight)
-            love.graphics.scale(self.unitWidth, self.unitHeight)
-            self:drawSquare(square)
-            love.graphics.pop()
+        local sx = (x - 1) * self.unitWidth
+        if self:isView(sx, 0, sx + self.unitWidth, self.height) then
+            for y, square in ipairs(row) do
+                local  sy = (y - 1) * self.unitHeight
+                if self:isView(sx, sy, sx + self.unitWidth, sy + self.unitHeight) then
+                    self:drawSquare(square, sx, sy)
+                end
+            end
         end
     end
 
@@ -87,33 +90,42 @@ function Field:draw()
 
     -- エンティティ描画
     for _, entity in ipairs(self.entities) do
-        if entity:drawable() then
+        if entity:drawable() and self:isView(entity:rect()) then
             entity:draw()
         end
     end
 end
 
 -- マスの描画
-function Field:drawSquare(square)
+function Field:drawSquare(square, x, y)
     love.graphics.setColor(
         square.nutrients.animal,
         square.nutrients.plantal,
         square.nutrients.mineral
     )
-    love.graphics.rectangle('fill', 0, 0, 1, 1)
+    love.graphics.rectangle('fill', x, y, self.unitWidth, self.unitHeight)
 end
 
 -- マス目の描画
 function Field:drawMeasures()
-    love.graphics.push()
     love.graphics.setColor(0, 0, 0)
+    local p = 0
     for x = 1, self.numHorizontal do
-        love.graphics.line((x - 1) * self.unitWidth, 0, (x - 1) * self.unitWidth, self.height)
+        p = (x - 1) * self.unitWidth
+        if p < self.viewport.left then
+        elseif p > self.viewport.right then
+        else
+            love.graphics.line(p, 0, p, self.height)
+        end
     end
     for y = 1, self.numVertical do
-        love.graphics.line(0, (y - 1) * self.unitHeight, self.width, (y - 1) * self.unitHeight)
+        p = (y - 1) * self.unitHeight
+        if p < self.viewport.top then
+        elseif p > self.viewport.bottom then
+        else
+            love.graphics.line(0, p, self.width, p)
+        end
     end
-    love.graphics.pop()
 end
 
 -- エンティティの追加
@@ -124,6 +136,30 @@ end
 -- エンティティを生成して追加
 function Field:emplaceEntity(t)
     self:addEntity(Entity(t))
+end
+
+-- 表示領域
+function Field:setViewport(x, y, w, h)
+    local sw, sh = love.graphics.getDimensions()
+
+    self.viewport = self.viewport or {}
+    self.viewport.left = x or 0
+    self.viewport.top = y or 0
+    self.viewport.right = self.viewport.left + (w or sw)
+    self.viewport.bottom = self.viewport.top + (h or sh)
+end
+
+-- 指定した矩形が表示できるかどうか
+function Field:isView(left, top, right, bottom)
+    local left = left or 0
+    local top = top or 0
+    local right = right or left
+    local bottom = bottom or top
+
+    return (right > self.viewport.left)
+        and (bottom > self.viewport.top)
+        and (left < self.viewport.right)
+        and (top < self.viewport.bottom)
 end
 
 return Field
