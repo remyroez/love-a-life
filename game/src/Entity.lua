@@ -36,6 +36,11 @@ function Entity:initialize(t)
     end
 end
 
+-- 破棄
+function Entity:destroy()
+    self.field:removeEntity(self)
+end
+
 -- 更新
 function Entity:update(dt)
     for i, t in ipairs(self.updateComponents) do

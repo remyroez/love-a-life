@@ -1,5 +1,6 @@
 
 local class = require 'middleclass'
+local lume = require 'lume'
 
 -- フィールドクラス
 local Field = class 'Field'
@@ -14,6 +15,7 @@ function Field:initialize(args)
     self:setup(args.width, args.height, args.numHorizontal, args.numVertical)
     self:setViewport()
     self.entities = self.entities or {}
+    self.maxEntities = self.maxEntities or 10000
 end
 
 -- セットアップ
@@ -130,12 +132,25 @@ end
 
 -- エンティティの追加
 function Field:addEntity(entity)
-    table.insert(self.entities, entity)
+    if #self.entities >= self.maxEntities then
+        -- 最大数オーバー
+        return entity, false
+    else
+        table.insert(self.entities, entity)
+        entity.field = self
+        return entity, true
+    end
 end
 
 -- エンティティを生成して追加
 function Field:emplaceEntity(t)
-    self:addEntity(Entity(t))
+    return self:addEntity(Entity(t))
+end
+
+-- エンティティの削除
+function Field:removeEntity(entity)
+    lume.remove(self.entities, entity)
+    entity.field = nil
 end
 
 -- 表示領域
