@@ -12,6 +12,12 @@ function Entity:initialize(t)
     -- 初期プロパティ
     self.x = self.x or 0
     self.y = self.y or 0
+    self.width = self.width or 0
+    self.height = self.height or 0
+    self.left = self.left or self.x
+    self.top = self.top or self.y
+    self.right = self.right or (self.left + self.width)
+    self.bottom = self.bottom or (self.top + self.height)
 
     -- 各種テーブル
     self.updateComponents = self.updateComponents or {}
@@ -130,6 +136,11 @@ end
 function Entity:getComponent(name)
     local components = self:getComponents(name)
     return components and components[1] or nil
+end
+
+-- 矩形
+function Entity:rect()
+    return self.left, self.top, self.right, self.bottom
 end
 
 return Entity
