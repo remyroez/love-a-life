@@ -3,13 +3,23 @@ local class = require 'middleclass'
 local lume = require 'lume'
 
 -- ボディコンポーネントクラス
-local Body = class('Body', require 'Component')
+local Component = require 'Component'
+local Body = class('Body', Component)
 
 -- 初期化
 function Body:initialize(t)
-    self.class.super.initialize(self, t)
+    Component.initialize(self, t)
 
+    -- 更新／描画フラグ
     self.updatable = false
+
+    -- 栄養素
+    self.nutrients = self.nutrients or {}
+    self.nutrients.animal = self.nutrients.animal or 0
+    self.nutrients.plantal = self.nutrients.plantal or 0
+    self.nutrients.mineral = self.nutrients.mineral or 0
+
+    -- その他プロパティ
     self.radius = self.radius or 10
 end
 
