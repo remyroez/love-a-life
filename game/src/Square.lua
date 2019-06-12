@@ -27,9 +27,10 @@ end
 function Square:decompose(dt)
     for category, power in pairs(self.decomposer.process) do
         if self.nutrients.mineral >= 1 then
-
+            -- 十分にあるのでスキップ
+            break
         elseif self.nutrients[category] > 0 then
-            local move = dt * self.decomposer.amount * power
+            local move = math.min(self.nutrients[category], dt * self.decomposer.amount * power)
             self.nutrients[category] = self.nutrients[category] - move
             self.nutrients.mineral = self.nutrients.mineral + move
         end
