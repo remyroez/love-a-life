@@ -17,7 +17,7 @@ function Root:initialize(t)
     t.exchange = t.exchange or {}
     t.exchange.mineral = t.exchange.mineral or 0.1
     t.cost = t.cost or 0.1
-    t.color = t.color or { 0, 1, 0 }
+    t.color = t.color or { 1, 1, 1 }
 
     -- Body 初期化
     Body.initialize(self, t)
@@ -32,9 +32,23 @@ function Root:update(dt)
     -- 地面から栄養素の吸収
     self:absorbNutrients(dt)
 
+    -- Body 更新
     Body.update(self, dt)
 
-    self.color[2] = (self.life + self.health + self.energy) / 3
+    -- カラー更新
+    --self.color[2] = (self.life + self.health + self.energy) / 3
+end
+
+-- 描画
+function Root:draw()
+    love.graphics.setColor(self.color)
+    --love.graphics.circle('fill', self.entity.x, self.entity.y, self.radius, 3)
+    love.graphics.polygon(
+        'line',
+        self.entity.x - 5, self.entity.y + 5,
+        self.entity.x + 5, self.entity.y + 5,
+        self.entity.x, self.entity.y - 5
+    )
 end
 
 -- 栄養素の吸収
