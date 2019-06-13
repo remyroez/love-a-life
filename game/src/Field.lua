@@ -54,7 +54,7 @@ end
 -- 描画
 function Field:update(dt)
     -- 分解
-    self:decompose(dt)
+    --self:decompose(dt)
 
     -- エンティティ更新
     for _, entity in ipairs(self.entities) do
