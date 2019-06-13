@@ -25,12 +25,17 @@ function Root:initialize(t)
     -- プロパティ
     self.absorb = self.absorb or {}
     self.absorb.power = self.absorb.power or 0.1
+    self.growTimer = 1
+    self.leaf = nil
 end
 
 -- 更新
 function Root:update(dt)
     -- 地面から栄養素の吸収
     self:absorbNutrients(dt)
+
+    -- 葉の発生
+    self:growLeaf(dt)
 
     -- Body 更新
     Body.update(self, dt)
@@ -61,6 +66,37 @@ function Root:absorbNutrients(dt)
         t.mineral = t.mineral - n
         self.nutrients.mineral = self.nutrients.mineral + n
     end
+end
+
+-- 葉の発生
+function Root:growLeaf(dt)
+    self.growTimer = self.growTimer - dt
+    if self.growTimer > 0 then
+        -- タイマー作動中
+    elseif (self.leaf and not self.leaf.remove) or self.entity:hasComponent('Leaf') then
+        -- 既に葉がある
+        self.growTimer = 100
+    elseif self.energy > 0.5 and self.nutrients.mineral > 0.5 then
+        self.leaf = self.entity:addComponent(
+            (require 'components.Leaf'){
+                life = self.life,
+                health = self.health,
+                energy = self.energy * 0.5,
+                nutrients = {
+                    mineral = self.nutrients.mineral * 0.5
+                }
+            }
+        )
+        self.energy = self.energy * 0.5
+        self.nutrients.mineral = self.nutrients.mineral * 0.5
+        self.growTimer = 100
+    else
+        self.growTimer = 1
+    end
+end
+
+-- 栄養の運搬
+function Root:provideNutrients(dt)
 end
 
 return Root

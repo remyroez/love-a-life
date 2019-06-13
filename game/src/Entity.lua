@@ -124,6 +124,8 @@ function Entity:addComponent(component)
 
     -- コンポーネント一覧に追加
     table.insert(self.components, component)
+
+    return component
 end
 
 -- 指定のテーブルの優先度別テーブルからコンポーネントを削除する
@@ -169,6 +171,11 @@ end
 function Entity:getComponent(name)
     local components = self:getComponents(name)
     return components and components[1] or nil
+end
+
+-- 指定の名前のコンポーネントがあるかどうか返す
+function Entity:hasComponent(name)
+    return self.nameTable[name] and self.nameTable[name][1] ~= nil
 end
 
 -- 矩形
