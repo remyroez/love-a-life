@@ -13,6 +13,7 @@ function Root:initialize(t)
     t.drawable = t.drawable == nil and true or t.drawable
 
     -- Body
+    t.material = t.material or 'plantal'
     t.exchange = t.exchange or {}
     t.exchange.mineral = t.exchange.mineral or 0.1
     t.cost = t.cost or 0.1

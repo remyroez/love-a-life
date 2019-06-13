@@ -31,8 +31,8 @@ function Body:initialize(t)
 
     -- エネルギー
     self.life = self.life or 1
-    self.health = self.health or 1
-    self.energy = self.energy or 1
+    self.health = self.health or 0
+    self.energy = self.energy or 0
     self.cost = self.cost or 0
     self.healing = self.healing or 0
     self.mass = self.mass or 1
