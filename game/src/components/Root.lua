@@ -16,7 +16,7 @@ function Root:initialize(t)
     t.material = t.material or 'plantal'
     t.exchange = t.exchange or {}
     t.exchange.mineral = t.exchange.mineral or 0.1
-    t.cost = t.cost or 0.1
+    t.cost = t.cost or 0.01
     t.color = t.color or { 1, 1, 1 }
 
     -- Body 初期化
@@ -25,6 +25,7 @@ function Root:initialize(t)
     -- プロパティ
     self.absorb = self.absorb or {}
     self.absorb.power = self.absorb.power or 0.1
+    self.providePower = self.providePower or 0.05
     self.growTimer = 1
     self.leaf = nil
 end
@@ -36,6 +37,9 @@ function Root:update(dt)
 
     -- 葉の発生
     self:growLeaf(dt)
+
+    -- 栄養を送る
+    self:provideNutrients(dt)
 
     -- Body 更新
     Body.update(self, dt)
@@ -97,6 +101,26 @@ end
 
 -- 栄養の運搬
 function Root:provideNutrients(dt)
+    -- 葉が削除されていたら登録解除
+    if self.leaf and self.leaf.remove then
+        self.leaf = nil
+    end
+
+    -- 葉が登録されていなければ検索
+    if self.leaf == nil then
+        self.leaf = self.entity:getComponent('Leaf')
+    end
+
+    -- 処理
+    if self.leaf == nil then
+        -- 葉がない
+    elseif self.leaf.nutrients.mineral >= 1 then
+        -- 葉の栄養素が十分
+    else
+        local n = math.min(self.nutrients.mineral, self.providePower * dt)
+        self.nutrients.mineral = self.nutrients.mineral - n
+        self.leaf.nutrients.mineral = self.leaf.nutrients.mineral + n
+    end
 end
 
 return Root
