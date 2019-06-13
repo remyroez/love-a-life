@@ -20,8 +20,8 @@ function Game:load(...)
 
     -- フィールド
     self.field = Field {
-        width = 100,
-        height = 100,
+        width = 300,
+        height = 300,
         numHorizontal = 10,
         numVertical = 10,
         maxEntities = 10000,
@@ -37,7 +37,7 @@ function Game:load(...)
             width = 10,
             height = 10,
             components = {
-                (require 'components.Root') {}
+                (require 'components.Seed') {}
             },
         }
     end
