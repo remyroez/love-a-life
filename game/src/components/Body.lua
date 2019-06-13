@@ -8,10 +8,11 @@ local Body = class('Body', Component)
 
 -- 初期化
 function Body:initialize(t)
-    Component.initialize(self, t)
-
     -- 更新／描画フラグ
-    self.updatable = false
+    t.updatable = t.updatable ~= nil and t.updatable or false
+
+    -- Component 初期化
+    Component.initialize(self, t)
 
     -- マテリアル
     self.material = 'mineral'
@@ -33,9 +34,12 @@ function Body:initialize(t)
     self.health = self.health or 1
     self.energy = self.energy or 1
     self.cost = self.cost or 0
+    self.healing = self.healing or 0
+    self.mass = self.mass or 1
 
     -- その他プロパティ
     self.radius = self.radius or 10
+    self.color = self.color or { 1, 1, 1 }
 end
 
 -- 更新
@@ -98,7 +102,7 @@ end
 
 -- 描画
 function Body:draw()
-    love.graphics.setColor(1, 1, 1)
+    love.graphics.setColor(self.color)
     --love.graphics.circle('fill', self.entity.x, self.entity.y, self.radius, 3)
     love.graphics.polygon(
         'fill',
