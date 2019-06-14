@@ -47,7 +47,7 @@ function Body:update(dt)
     self:exchangeNutrients(dt)
     self:payCost(dt)
     if self.life < 0 then
-        self.remove = true
+        self:die()
     end
 end
 
@@ -103,13 +103,35 @@ end
 -- 描画
 function Body:draw()
     love.graphics.setColor(self.color)
-    --love.graphics.circle('fill', self.entity.x, self.entity.y, self.radius, 3)
     love.graphics.polygon(
         'fill',
         self.entity.x - 5, self.entity.y + 5,
         self.entity.x + 5, self.entity.y + 5,
         self.entity.x, self.entity.y - 5
     )
+end
+
+-- 質量分の栄養素
+function Body:massNutrient()
+    return self.mass
+end
+
+-- 死亡
+function Body:die()
+    -- マスに栄養素を送る
+    local square = self.entity.field:getSquare(self.entity.x, self.entity.y)
+    if square then
+        -- 自身を栄養素に変換して送る
+        square.nutrients[self.material] = square.nutrients[self.material] + self:massNutrient()
+
+        -- 手持ちの栄養素を送る
+        for material, value in pairs(self.nutrients) do
+            square.nutrients[material] = square.nutrients[material] + self.nutrients[material]
+        end
+    end
+
+    -- 削除
+    self.remove = true
 end
 
 return Body

@@ -19,6 +19,7 @@ function Seed:initialize(t)
     t.exchange.mineral = t.exchange.mineral or 0.1
     t.cost = t.cost or 0.01
     t.color = t.color or { 1, 1, 0 }
+    t.mass = t.mass or 0.1
 
     -- Body 初期化
     Body.initialize(self, t)

@@ -18,6 +18,7 @@ function Leaf:initialize(t)
     t.exchange.mineral = t.exchange.mineral or 0.1
     t.cost = t.cost or 0.01
     t.color = t.color or { 0, 1, 0 }
+    t.mass = t.mass or 0.5
 
     -- Body 初期化
     Body.initialize(self, t)
@@ -80,12 +81,17 @@ end
 -- 描画
 function Leaf:draw()
     love.graphics.setColor(self.color)
-    love.graphics.circle('fill', self.entity.x, self.entity.y, self.radius * (self.grow.current / self.grow.max), 8)
+    love.graphics.circle('fill', self.entity.x, self.entity.y, self.radius * self:growRate(), 8)
 end
 
 -- 成長率
 function Leaf:growRate()
     return (self.grow.current / self.grow.max)
+end
+
+-- 質量分の栄養素
+function Leaf:massNutrient()
+    return self.mass * self.radius * self:growRate()
 end
 
 return Leaf
