@@ -54,4 +54,15 @@ function Square:decompose(dt)
     end
 end
 
+-- 転送
+function Square:transfer(dt, dist)
+    for material, value in pairs(self.nutrients) do
+        if value > dist.nutrients[material] then
+            local trans = math.min(value, (value - dist.nutrients[material]) * 0.001 * dt)
+            dist.nutrients[material] = dist.nutrients[material] + trans
+            self.nutrients[material] = self.nutrients[material] - trans
+        end
+    end
+end
+
 return Square

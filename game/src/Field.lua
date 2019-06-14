@@ -9,6 +9,19 @@ local Field = class 'Field'
 local Square = require 'Square'
 local Entity = require 'Entity'
 
+-- 近傍
+Field.static.neighborhoods = {
+    { -1, -1 },
+    {  0, -1 },
+    {  1, -1 },
+    { -1,  0 },
+    --{  0,  0 },
+    {  1,  0 },
+    { -1,  1 },
+    {  0,  1 },
+    {  1,  1 },
+}
+
 -- 初期化
 function Field:initialize(args)
     args = args or {}
@@ -81,7 +94,17 @@ end
 function Field:decompose(dt)
     for x, row in ipairs(self.squares) do
         for y, square in ipairs(row) do
+            -- 分解
             square:decompose(dt)
+
+            -- 隣のマスへ栄養を転送
+            for _, neighborhood in ipairs(Field.neighborhoods) do
+                local nx, ny = x + neighborhood[1], y + neighborhood[2]
+                local s = self.squares[nx] and self.squares[nx][ny] or nil
+                if s then
+                    square:transfer(dt, s)
+                end
+            end
         end
     end
 end
