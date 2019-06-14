@@ -52,7 +52,7 @@ end
 -- 描画
 function Leaf:draw()
     love.graphics.setColor(self.color)
-    love.graphics.circle('fill', self.entity.x, self.entity.y, self.radius * (self.grow.current / self.grow.max), 5)
+    love.graphics.circle('fill', self.entity.x, self.entity.y, self.radius * (self.grow.current / self.grow.max), 8)
 end
 
 return Leaf
