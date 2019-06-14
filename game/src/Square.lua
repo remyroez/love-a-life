@@ -17,23 +17,40 @@ function Square:initialize(t)
 
     -- 分解者
     self.decomposer = self.decomposer or {}
-    self.decomposer.amount = self.decomposer.amount or 100
+    self.decomposer.amount = self.decomposer.amount or 1
     self.decomposer.process = self.decomposer.process or {}
-    self.decomposer.process.animal = self.decomposer.process.animal or 0.0001
-    self.decomposer.process.plantal = self.decomposer.process.plantal or 0.0001
+    self.decomposer.process.animal = self.decomposer.process.animal or 0.01
+    self.decomposer.process.plantal = self.decomposer.process.plantal or 0.01
 end
 
 -- 分解作用
 function Square:decompose(dt)
+    local plus = 0
+    local minus = 0
+
     for category, power in pairs(self.decomposer.process) do
-        if self.nutrients.mineral >= 1 then
+        local req = dt * self.decomposer.amount * power
+        if self.nutrients.mineral >= 10 then
             -- 十分にあるのでスキップ
-            break
         elseif self.nutrients[category] > 0 then
-            local move = math.min(self.nutrients[category], dt * self.decomposer.amount * power)
+            -- 栄養素を分解して、無機栄養素へ変換
+            local move = math.min(self.nutrients[category], req)
             self.nutrients[category] = self.nutrients[category] - move
             self.nutrients.mineral = self.nutrients.mineral + move
+
+            -- 報酬
+            plus = plus + move + move * love.math.random()
+        else
+            -- ペナルティ
+            minus = minus + req + req * love.math.random()
         end
+    end
+
+    -- 分解者の増減
+    if plus > 0 then
+        self.decomposer.amount = self.decomposer.amount + plus
+    elseif minus > 0 then
+        self.decomposer.amount = self.decomposer.amount - minus
     end
 end
 
