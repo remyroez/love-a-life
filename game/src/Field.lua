@@ -54,7 +54,7 @@ end
 -- 描画
 function Field:update(dt)
     -- 分解
-    --self:decompose(dt)
+    self:decompose(dt)
 
     -- エンティティ更新
     for _, entity in ipairs(self.entities) do
@@ -115,9 +115,9 @@ end
 -- マスの描画
 function Field:drawSquare(square, x, y)
     love.graphics.setColor(
-        square.nutrients.animal,
-        square.nutrients.plantal,
-        square.nutrients.mineral
+        square.nutrients.animal * 0.1,
+        square.nutrients.plantal * 0.1,
+        square.nutrients.mineral * 0.1
     )
     love.graphics.rectangle('fill', x, y, self.unitWidth, self.unitHeight)
 end

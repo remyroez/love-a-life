@@ -14,10 +14,10 @@ function Seed:initialize(t)
 
     -- Body
     t.nutrients = t.nutrients or {}
-    t.nutrients.mineral = t.nutrients.mineral or 5
+    t.nutrients.mineral = t.nutrients.mineral or 2
     t.exchange = t.exchange or {}
     t.exchange.mineral = t.exchange.mineral or 0.1
-    t.cost = t.cost or 0 --0.001
+    t.cost = t.cost or 0.01
     t.color = t.color or { 1, 1, 0 }
 
     -- Body 初期化
@@ -62,6 +62,8 @@ function Seed:checkSprout(dt)
             )
             self.remove = true
         end
+    else
+        self.remove = true
     end
 end
 

@@ -11,9 +11,9 @@ function Square:initialize(t)
 
     -- 栄養素
     self.nutrients = self.nutrients or {}
-    self.nutrients.animal = self.nutrients.animal or love.math.noise(self.xr, self.yr, 0) * 0.5
-    self.nutrients.plantal = self.nutrients.plantal or love.math.noise(self.xr, self.yr, 100) * 0.5
-    self.nutrients.mineral = self.nutrients.mineral or love.math.noise(self.xr, self.yr, 200) * 0.5
+    self.nutrients.animal = self.nutrients.animal or love.math.noise(self.xr, self.yr, 0) * 10
+    self.nutrients.plantal = self.nutrients.plantal or love.math.noise(self.xr, self.yr, 100) * 10
+    self.nutrients.mineral = self.nutrients.mineral or love.math.noise(self.xr, self.yr, 200) * 10
 
     -- 分解者
     self.decomposer = self.decomposer or {}
