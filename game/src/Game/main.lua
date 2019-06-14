@@ -48,11 +48,14 @@ function Game:load(...)
     self.offsetOrigin = { x = 0, y = 0 }
     self.offset = { x = 0, y = 0 }
     self.zoom = 0
+    self.speed = 1
     self:setOffset()
 end
 
 -- 更新
 function Game:update(dt, ...)
+    dt = dt * self.speed
+
     -- 中クリック
     if love.mouse.isDown(3) then
         if not self.move then
@@ -97,6 +100,7 @@ function Game:draw(...)
         str = str .. 'animal = ' .. square.nutrients.animal .. ''
         str = str .. ', plantal = ' .. square.nutrients.plantal .. ''
         str = str .. ', mineral = ' .. square.nutrients.mineral .. ''
+        str = str .. '\ndecomposer.amount = ' .. square.decomposer.amount .. ''
     end
     love.graphics.print(str)
 
@@ -117,6 +121,28 @@ end
 
 -- キー入力
 function Game:keypressed(key, scancode, isrepeat)
+    if key == '1' then
+        self.speed = 1
+    elseif key == '2' then
+        self.speed = 2
+    elseif key == '3' then
+        self.speed = 4
+    elseif key == '4' then
+        self.speed = 8
+    elseif key == '5' then
+        self.speed = 16
+    elseif key == '6' then
+        self.speed = 32
+    elseif key == '7' then
+        self.speed = 64
+    elseif key == '8' then
+        self.speed = 128
+    elseif key == '9' then
+        self.speed = 256
+    elseif key == '0' then
+        self.speed = 0
+    else
+    end
 end
 
 -- キー離した
