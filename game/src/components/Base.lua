@@ -38,7 +38,6 @@ function Base:initialize(t)
     self.mass = self.mass or 1
 
     -- その他プロパティ
-    self.radius = self.radius or 10
     self.color = self.color or { 1, 1, 1 }
 end
 

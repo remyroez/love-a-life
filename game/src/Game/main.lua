@@ -34,7 +34,8 @@ function Game:load(...)
             y = y,
             angle = math.pi * 2 * 0.25,
             components = {
-                (require 'components.Leg') {}
+                (require 'components.Leg') {},
+                (require 'components.Body') {},
             },
         }
     end
