@@ -3,8 +3,8 @@ local class = require 'middleclass'
 local lume = require 'lume'
 
 -- 種コンポーネントクラス
-local Body = require 'components.Body'
-local Leaf = class('Leaf', Body)
+local Base = require 'components.Base'
+local Leaf = class('Leaf', Base)
 
 -- 初期化
 function Leaf:initialize(t)
@@ -12,7 +12,7 @@ function Leaf:initialize(t)
     t.updatable = t.updatable == nil and true or t.updatable
     t.drawable = t.drawable == nil and true or t.drawable
 
-    -- Body
+    -- Base
     t.material = t.material or 'plantal'
     t.exchange = t.exchange or {}
     t.exchange.mineral = t.exchange.mineral or 0.1
@@ -20,8 +20,8 @@ function Leaf:initialize(t)
     t.color = t.color or { 0, 1, 0 }
     t.mass = t.mass or 0.5
 
-    -- Body 初期化
-    Body.initialize(self, t)
+    -- Base 初期化
+    Base.initialize(self, t)
 
     -- プロパティ
     self.radius = self.radius or 5
@@ -37,8 +37,8 @@ function Leaf:update(dt)
     -- 生長
     self:grows(dt)
 
-    -- Body 更新
-    Body.update(self, dt)
+    -- Base 更新
+    Base.update(self, dt)
 
     -- 種を蒔く
     self:plantSeeds(dt)

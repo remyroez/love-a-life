@@ -3,8 +3,8 @@ local class = require 'middleclass'
 local lume = require 'lume'
 
 -- 種コンポーネントクラス
-local Body = require 'components.Body'
-local Seed = class('Seed', Body)
+local Base = require 'components.Base'
+local Seed = class('Seed', Base)
 
 -- 初期化
 function Seed:initialize(t)
@@ -12,7 +12,7 @@ function Seed:initialize(t)
     t.updatable = t.updatable == nil and true or t.updatable
     t.drawable = t.drawable == nil and true or t.drawable
 
-    -- Body
+    -- Base
     t.nutrients = t.nutrients or {}
     t.nutrients.mineral = t.nutrients.mineral or 2
     t.exchange = t.exchange or {}
@@ -21,8 +21,8 @@ function Seed:initialize(t)
     t.color = t.color or { 1, 1, 0 }
     t.mass = t.mass or 0.1
 
-    -- Body 初期化
-    Body.initialize(self, t)
+    -- Base 初期化
+    Base.initialize(self, t)
 
     -- プロパティ
     self.sproutThreshold = self.sproutThreshold or 0 --0.5
@@ -33,8 +33,8 @@ function Seed:update(dt)
     -- 発芽チェック
     self:checkSprout(dt)
 
-    -- Body 更新
-    Body.update(self, dt)
+    -- Base 更新
+    Base.update(self, dt)
 
     -- カラー更新
     --self.color[1] = (self.life + self.health + self.energy) / 3

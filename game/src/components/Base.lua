@@ -2,12 +2,12 @@
 local class = require 'middleclass'
 local lume = require 'lume'
 
--- ボディコンポーネントクラス
+-- ベースコンポーネントクラス
 local Component = require 'Component'
-local Body = class('Body', Component)
+local Base = class('Base', Component)
 
 -- 初期化
-function Body:initialize(t)
+function Base:initialize(t)
     -- 更新／描画フラグ
     t.updatable = t.updatable ~= nil and t.updatable or false
 
@@ -43,7 +43,7 @@ function Body:initialize(t)
 end
 
 -- 更新
-function Body:update(dt)
+function Base:update(dt)
     self:exchangeNutrients(dt)
     self:payCost(dt)
     if self.life < 0 then
@@ -52,7 +52,7 @@ function Body:update(dt)
 end
 
 -- コストを支払う
-function Body:payCost(dt)
+function Base:payCost(dt)
     -- コスト
     local cost = self.cost * dt
 
@@ -85,7 +85,7 @@ function Body:payCost(dt)
 end
 
 -- 栄養素をエネルギーに交換
-function Body:exchangeNutrients(dt)
+function Base:exchangeNutrients(dt)
     for category, rate in pairs(self.exchange) do
         if rate <= 0 then
             -- 変換レートが０
@@ -101,7 +101,7 @@ function Body:exchangeNutrients(dt)
 end
 
 -- 描画
-function Body:draw()
+function Base:draw()
     love.graphics.setColor(self.color)
     love.graphics.polygon(
         'fill',
@@ -112,12 +112,12 @@ function Body:draw()
 end
 
 -- 質量分の栄養素
-function Body:massNutrient()
+function Base:massNutrient()
     return self.mass
 end
 
 -- 死亡
-function Body:die()
+function Base:die()
     -- マスに栄養素を送る
     local square = self.entity.field:getSquare(self.entity.x, self.entity.y)
     if square then
@@ -134,4 +134,4 @@ function Body:die()
     self.remove = true
 end
 
-return Body
+return Base
