@@ -58,9 +58,17 @@ function Leg:draw()
     love.graphics.push()
     love.graphics.setColor(self.color)
     love.graphics.setLineWidth(self.thickness)
-    for i = 2, self.legs + 1 do
-        local x, y = lume.vector(math.pi * 2 / (self.legs + 1) * (i - 1) + self.entity.angle, self.length)
-        love.graphics.line(self.entity.x, self.entity.y, self.entity.x + x, self.entity.y + y)
+    local n = self.legs + 1
+    if n % 2 > 0 then
+        n = n + 1
+    end
+    for i = 2, n do
+        if i == (n / 2 + 1) then
+            -- お尻
+        else
+            local x, y = lume.vector(math.pi * 2 / n * (i - 1) + self.entity.angle, self.length)
+            love.graphics.line(self.entity.x, self.entity.y, self.entity.x + x, self.entity.y + y)
+        end
     end
     love.graphics.pop()
 end
