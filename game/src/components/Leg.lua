@@ -67,7 +67,7 @@ end
 
 -- 質量分の栄養素
 function Leg:massNutrient()
-    return self.mass * self.radius * self:growRate()
+    return self.mass * self.legs * self.thickness
 end
 
 return Leg
