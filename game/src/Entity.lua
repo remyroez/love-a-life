@@ -12,12 +12,7 @@ function Entity:initialize(t)
     -- 初期プロパティ
     self.x = self.x or 0
     self.y = self.y or 0
-    self.width = self.width or 0
-    self.height = self.height or 0
-    self.left = self.left or self.x
-    self.top = self.top or self.y
-    self.right = self.right or (self.left + self.width)
-    self.bottom = self.bottom or (self.top + self.height)
+    self.angle = self.angle or 0
     self.remove = false
 
     -- 各種テーブル
@@ -180,7 +175,14 @@ end
 
 -- 矩形
 function Entity:rect()
-    return self.left, self.top, self.right, self.bottom
+    return self.x, self.y, self.x, self.y
+end
+
+-- 移動
+function Entity:move(magnitude)
+    local x, y = lume.vector(self.angle, magnitude)
+    self.x = math.max(0, math.min(self.x + x, self.field.width))
+    self.y = math.max(0, math.min(self.y + y, self.field.height))
 end
 
 return Entity
