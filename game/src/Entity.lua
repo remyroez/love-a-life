@@ -185,4 +185,13 @@ function Entity:move(magnitude)
     self.y = math.max(0, math.min(self.y + y, self.field.height))
 end
 
+-- 回転
+function Entity:rotate(angle)
+    self.angle = self.angle + angle
+    if (self.angle > (math.pi * 2)) or (self.angle < 0) then
+        local a = self.angle
+        self.angle = self.angle - math.floor(self.angle / (math.pi * 2)) * (math.pi * 2)
+    end
+end
+
 return Entity
