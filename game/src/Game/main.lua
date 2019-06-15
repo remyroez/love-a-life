@@ -91,32 +91,33 @@ function Game:draw(...)
 
     -- デバッグ
     love.graphics.setColor(1, 1, 1)
-    local str = 'FPS: ' .. tostring(love.timer.getFPS()) .. '\nscale = ' .. self:scale() .. ', zoom = ' .. self.zoom .. '\n'
+    local str = 'FPS: ' .. tostring(love.timer.getFPS()) .. '\nscale = ' .. self:scale() .. '\nzoom = ' .. self.zoom .. '\nspeed = ' .. self.speed .. '\n'
     local x, y = love.mouse.getPosition()
     x, y = (x - self.offset.x) / self:scale(), (y - self.offset.y) / self:scale()
-    str = str .. 'x = ' .. x .. ', y = ' .. y .. '\n'
+    str = str .. 'x = ' .. x .. ', y = ' .. y .. '\n\nsquare\n'
     local square = self.field:getSquare(x, y)
     if square then
         str = str .. 'animal = ' .. square.nutrients.animal .. ''
         str = str .. ', plantal = ' .. square.nutrients.plantal .. ''
         str = str .. ', mineral = ' .. square.nutrients.mineral .. ''
-        str = str .. '\ndecomposer.amount = ' .. square.decomposer.amount .. ''
+        str = str .. '\ndecomposer.amount = ' .. square.decomposer.amount .. '\n'
     end
-    love.graphics.print(str)
 
+    str = str .. '\nentities = ' .. #self.field.entities .. '\n\n'
     local entity = self.field.entities[1]
     if entity then
-        local s = 'entity\n'
-        s = s .. '  x = ' .. entity.x .. ', y = ' .. entity.y .. '\n'
+        str = str .. 'entity [1]\n'
+        str = str .. '  x = ' .. entity.x .. ', y = ' .. entity.y .. '\n'
         for _, c in ipairs(entity.components) do
-            s = s .. '  ' .. c.class.name .. '\n'
+            str = str .. '  ' .. c.class.name .. '\n'
             if c.nutrients then
-                s = s .. '    life = ' .. c.life .. ', health = ' .. c.health .. ', energy = ' .. c.energy .. ', cost = ' .. c.cost .. '\n'
-                s = s .. '    nutrients.animal = ' .. c.nutrients.animal .. ', .plantal = ' .. c.nutrients.plantal .. ', .mineral = ' .. c.nutrients.mineral .. '\n'
+                str = str .. '    life = ' .. c.life .. ', health = ' .. c.health .. ', energy = ' .. c.energy .. ', cost = ' .. c.cost .. '\n'
+                str = str .. '    nutrients.animal = ' .. c.nutrients.animal .. ', .plantal = ' .. c.nutrients.plantal .. ', .mineral = ' .. c.nutrients.mineral .. '\n'
             end
         end
-        love.graphics.print(s, 0, 100)
     end
+
+    love.graphics.print(str)
 end
 
 -- キー入力
