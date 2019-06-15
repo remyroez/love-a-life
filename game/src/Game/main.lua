@@ -32,12 +32,9 @@ function Game:load(...)
         self.field:emplaceEntity {
             x = x,
             y = y,
-            left = x - 5,
-            top = y - 5,
-            width = 10,
-            height = 10,
+            angle = math.pi * 2 * 0.25,
             components = {
-                (require 'components.Seed') {}
+                (require 'components.Leg') {}
             },
         }
     end
