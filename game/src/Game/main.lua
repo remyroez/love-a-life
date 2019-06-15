@@ -19,7 +19,28 @@ function Game:load(...)
     self.width, self.height = love.graphics.getDimensions()
 
     -- フィールド
-    self.field = Field{  }
+    self.field = Field {
+        width = 300,
+        height = 300,
+        numHorizontal = 10,
+        numVertical = 10,
+        maxEntities = 10000,
+    }
+    for i = 1, 10 do
+        local x = love.math.random(self.field.width)
+        local y = love.math.random(self.field.height)
+        self.field:emplaceEntity {
+            x = x,
+            y = y,
+            left = x - 5,
+            top = y - 5,
+            width = 10,
+            height = 10,
+            components = {
+                (require 'components.Seed') {}
+            },
+        }
+    end
 
     -- 移動モード
     self.move = false
@@ -27,10 +48,14 @@ function Game:load(...)
     self.offsetOrigin = { x = 0, y = 0 }
     self.offset = { x = 0, y = 0 }
     self.zoom = 0
+    self.speed = 1
+    self:setOffset()
 end
 
 -- 更新
 function Game:update(dt, ...)
+    dt = dt * self.speed
+
     -- 中クリック
     if love.mouse.isDown(3) then
         if not self.move then
@@ -66,21 +91,59 @@ function Game:draw(...)
 
     -- デバッグ
     love.graphics.setColor(1, 1, 1)
-    local str = 'scale = ' .. self:scale() .. ', zoom = ' .. self.zoom .. '\n'
+    local str = 'FPS: ' .. tostring(love.timer.getFPS()) .. '\nscale = ' .. self:scale() .. '\nzoom = ' .. self.zoom .. '\nspeed = ' .. self.speed .. '\n'
     local x, y = love.mouse.getPosition()
     x, y = (x - self.offset.x) / self:scale(), (y - self.offset.y) / self:scale()
-    str = str .. 'x = ' .. x .. ', y = ' .. y .. '\n'
+    str = str .. 'x = ' .. x .. ', y = ' .. y .. '\n\nsquare\n'
     local square = self.field:getSquare(x, y)
     if square then
         str = str .. 'animal = ' .. square.nutrients.animal .. ''
         str = str .. ', plantal = ' .. square.nutrients.plantal .. ''
         str = str .. ', mineral = ' .. square.nutrients.mineral .. ''
+        str = str .. '\ndecomposer.amount = ' .. square.decomposer.amount .. '\n'
     end
+
+    str = str .. '\nentities = ' .. #self.field.entities .. '\n\n'
+    local entity = self.field.entities[1]
+    if entity then
+        str = str .. 'entity [1]\n'
+        str = str .. '  x = ' .. entity.x .. ', y = ' .. entity.y .. '\n'
+        for _, c in ipairs(entity.components) do
+            str = str .. '  ' .. c.class.name .. '\n'
+            if c.nutrients then
+                str = str .. '    life = ' .. c.life .. ', health = ' .. c.health .. ', energy = ' .. c.energy .. ', cost = ' .. c.cost .. '\n'
+                str = str .. '    nutrients.animal = ' .. c.nutrients.animal .. ', .plantal = ' .. c.nutrients.plantal .. ', .mineral = ' .. c.nutrients.mineral .. '\n'
+            end
+        end
+    end
+
     love.graphics.print(str)
 end
 
 -- キー入力
 function Game:keypressed(key, scancode, isrepeat)
+    if key == '1' then
+        self.speed = 1
+    elseif key == '2' then
+        self.speed = 2
+    elseif key == '3' then
+        self.speed = 4
+    elseif key == '4' then
+        self.speed = 8
+    elseif key == '5' then
+        self.speed = 16
+    elseif key == '6' then
+        self.speed = 32
+    elseif key == '7' then
+        self.speed = 64
+    elseif key == '8' then
+        self.speed = 128
+    elseif key == '9' then
+        self.speed = 256
+    elseif key == '0' then
+        self.speed = 0
+    else
+    end
 end
 
 -- キー離した
@@ -105,7 +168,7 @@ end
 
 -- マウスホイール
 function Game:wheelmoved(x, y)
-    if y < 0 and self.zoom > -9 then
+    if y < 0 and self.zoom > -19 then
         -- ズームアウト
         self.zoom = self.zoom - 1
         self:setOffset()
@@ -135,6 +198,8 @@ end
 
 -- オフセットの設定
 function Game:setOffset(x, y)
-    self.offset.x = math.max(-self.field.width * self:scale() + self.width * 0.5, math.min(x or self.offset.x, self.width * 0.5))
-    self.offset.y = math.max(-self.field.height * self:scale() + self.height * 0.5, math.min(y or self.offset.y, self.height * 0.5))
+    local s = self:scale()
+    self.offset.x = math.max(-self.field.width * s + self.width * 0.5, math.min(x or self.offset.x, self.width * 0.5))
+    self.offset.y = math.max(-self.field.height * s + self.height * 0.5, math.min(y or self.offset.y, self.height * 0.5))
+    self.field:setViewport(-self.offset.x / s, -self.offset.y / s, self.width / s, self.height / s)
 end
