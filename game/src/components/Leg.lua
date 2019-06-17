@@ -55,8 +55,8 @@ end
 
 -- 描画
 function Leg:draw()
-    love.graphics.push()
     love.graphics.setColor(self.color)
+    local lw = love.graphics.getLineWidth()
     love.graphics.setLineWidth(self.thickness)
     local n = self.legs + 1
     if n % 2 > 0 then
@@ -70,7 +70,7 @@ function Leg:draw()
             love.graphics.line(self.entity.x, self.entity.y, self.entity.x + x, self.entity.y + y)
         end
     end
-    love.graphics.pop()
+    love.graphics.setLineWidth(lw)
 end
 
 -- 質量分の栄養素
