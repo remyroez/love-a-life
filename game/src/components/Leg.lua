@@ -14,6 +14,7 @@ function Leg:initialize(t)
 
     -- Base
     t.material = t.material or 'animal'
+    t.energy = t.energy or 1
     t.cost = t.cost or 0
     t.color = t.color or { 1, 0, 0 }
     t.mass = t.mass or 0.1
@@ -27,6 +28,9 @@ function Leg:initialize(t)
     self.length = self.length or 10
     self.thickness = self.thickness or 3
     self.angle = self.angle or math.pi * 2 * -0.01
+
+    self.energy = self.energy *  self.legs
+    self.cost = 0.01 * self.legs * self.speed
 end
 
 -- 更新

@@ -17,7 +17,8 @@ function Body:initialize(t)
     t.material = t.material or 'animal'
     t.exchange = t.exchange or {}
     t.exchange.plantal = t.exchange.plantal or 0.1
-    t.cost = t.cost or 0
+    t.energy = t.energy or 5
+    t.cost = t.cost or 0.1
     t.color = t.color or { 1, 0, 0 }
     t.mass = t.mass or 0.5
 
@@ -30,6 +31,18 @@ function Body:initialize(t)
 
     -- プロパティ
     self.radius = self.radius or 8
+    self.providePower = self.providePower or 0.05
+end
+
+-- 死亡
+function Body:die()
+    Base.die(self)
+
+    -- 頭コンポーネントも削除
+    local heads = self.entity:getComponents('Head') or {}
+    for _, head in ipairs(heads) do
+        head:die()
+    end
 end
 
 -- 更新
@@ -39,6 +52,9 @@ function Body:update(dt)
 
     -- Base 更新
     Base.update(self, dt)
+
+    -- エネルギーの転送
+    self:provideEnergy(dt)
 end
 
 -- 描画
@@ -50,6 +66,41 @@ end
 -- 質量分の栄養素
 function Body:massNutrient()
     return self.mass * self.radius * self:growRate()
+end
+
+-- 栄養の運搬
+function Body:provideEnergy(dt)
+    local basePower = self.providePower * dt
+    local children = {}
+
+    -- Head
+    do
+        local components = self.entity:getComponents('Head')
+        if components then
+            children = lume.concat(children, components)
+        end
+    end
+
+    -- Leg
+    do
+        local components = self.entity:getComponents('Leg')
+        if components then
+            children = lume.concat(children, components)
+        end
+    end
+
+    -- エネルギーのやりとり
+    for _, child in ipairs(children) do
+        if (child.energy < self.energy) and (self.energy > 0) then
+            local power = math.min(self.energy, basePower)
+            child.energy = child.energy + power
+            self.energy = self.energy - power
+        elseif (child.energy > self.energy) and (child.energy > 0) then
+            local power = math.min(child.energy, basePower)
+            child.energy = child.energy - power
+            self.energy = self.energy + power
+        end
+    end
 end
 
 return Body

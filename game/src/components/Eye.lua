@@ -15,6 +15,7 @@ function Eye:initialize(t)
 
     -- Base
     t.material = t.material or 'animal'
+    t.energy = t.energy or 1
     t.cost = t.cost or 0
     t.color = t.color or { 0, 0, 0 }
     t.mass = t.mass or 0.1
@@ -28,7 +29,10 @@ function Eye:initialize(t)
 
     -- プロパティ
     self.radius = self.radius or 1
-    self.eyes = self.eyes or 1
+    self.eyes = self.eyes or 2
+
+    self.energy = self.energy * self.eyes
+    self.cost = 0.01 * self.eyes
 end
 
 -- 更新
