@@ -26,18 +26,26 @@ function Game:load(...)
         numVertical = 10,
         maxEntities = 10000,
     }
-    for i = 1, 10 do
-        local x = love.math.random(self.field.width)
-        local y = love.math.random(self.field.height)
+    for i = 1, 0 do
         self.field:emplaceEntity {
-            x = x,
-            y = y,
-            left = x - 5,
-            top = y - 5,
-            width = 10,
-            height = 10,
+            x = love.math.random(self.field.width),
+            y = love.math.random(self.field.height),
+            angle = math.pi * 2 * 0.25,
             components = {
-                (require 'components.Seed') {}
+                (require 'components.Seed') {},
+            },
+        }
+    end
+    for i = 1, 10 do
+        self.field:emplaceEntity {
+            x = love.math.random(self.field.width),
+            y = love.math.random(self.field.height),
+            angle = math.pi * 2 * 0.25,
+            components = {
+                (require 'components.Leg') {},
+                (require 'components.Head') {},
+                (require 'components.Body') {},
+                (require 'components.Eye') {},
             },
         }
     end

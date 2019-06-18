@@ -3,8 +3,8 @@ local class = require 'middleclass'
 local lume = require 'lume'
 
 -- 根コンポーネントクラス
-local Body = require 'components.Body'
-local Root = class('Root', Body)
+local Base = require 'components.Base'
+local Root = class('Root', Base)
 
 -- 初期化
 function Root:initialize(t)
@@ -12,7 +12,7 @@ function Root:initialize(t)
     t.updatable = t.updatable == nil and true or t.updatable
     t.drawable = t.drawable == nil and true or t.drawable
 
-    -- Body
+    -- Base
     t.material = t.material or 'plantal'
     t.exchange = t.exchange or {}
     t.exchange.mineral = t.exchange.mineral or 0.1
@@ -20,8 +20,8 @@ function Root:initialize(t)
     t.color = t.color or { 1, 1, 1 }
     t.mass = t.mass or 0.1
 
-    -- Body 初期化
-    Body.initialize(self, t)
+    -- Base 初期化
+    Base.initialize(self, t)
 
     -- プロパティ
     self.absorb = self.absorb or {}
@@ -42,8 +42,8 @@ function Root:update(dt)
     -- 栄養を送る
     self:provideNutrients(dt)
 
-    -- Body 更新
-    Body.update(self, dt)
+    -- Base 更新
+    Base.update(self, dt)
 
     -- カラー更新
     --self.color[2] = (self.life + self.health + self.energy) / 3
